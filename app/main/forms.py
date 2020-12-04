@@ -6,7 +6,6 @@ class BlogForm(FlaskForm):
 
  title = StringField('blog title',validators=[Required()])
  content = TextAreaField('blog', validators=[Required()])
- category = SelectField('Category', choices=[('Interview','Interview'),('Advertisement','Advertisement'),('Project','Project'),('General','General'),('Pickuplines','Pickuplines')], validators=[Required()])
  submit = SubmitField('Submit')
  
 

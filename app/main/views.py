@@ -64,10 +64,9 @@ def new_blog():
     if blog_form.validate_on_submit():
         title = blog_form.title.data
         body = blog_form.content.data
-        category = blog_form.category.data
         title = blog_form.title.data
 
-        new_blog = Blog(title=title, content=body, category = category, user = current_user)
+        new_blog = Blog(title=title, content=body, user = current_user)
         new_blog.save_blog()
 
         return redirect(url_for('main.index'))
