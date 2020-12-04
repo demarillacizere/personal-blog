@@ -73,4 +73,4 @@ def new_blog():
 
 
     title = 'New blog | One Minute blog'
-    return render_template('new_blog.html', title = title, blogform = blog_f
+    return render_template('new_blog.html', title = title, blogform = blog_form)
