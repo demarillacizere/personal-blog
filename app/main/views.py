@@ -7,8 +7,9 @@ from .. import db, photos
 
 @main.route('/')
 def index():
+    blogs=Blog.query.order_by(Blog.posted.desc()).all()
     title="Shout out"
-    return render_template('index.html', title = title)
+    return render_template('index.html', title = title,blogs=blogs)
 
 @main.route('/user/<uname>')
 def profile(uname):
@@ -76,7 +77,6 @@ def new_blog():
     return render_template('new_blog.html', title = title, blogform = blog_form)
 
 @main.route('/blog/<int:blog_id>/comment',methods = ['GET', 'POST'])
-@login_required
 def comment(blog_id):
     '''
     View comments page function that returns the comment page and its data
@@ -90,7 +90,7 @@ def comment(blog_id):
     if comment_form.validate_on_submit():
         comment = comment_form.comment.data
 
-        new_comment = Comment(comment=comment, blog_id = blog_id, user = current_user)
+        new_comment = Comment(comment=comment, blog_id = blog_id)
         new_comment.save_comment()
 
         return redirect(url_for('.comment', blog_id=blog_id))

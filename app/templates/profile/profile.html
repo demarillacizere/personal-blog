@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
 <div class="row">
-
+    <button class="btn btn-outline-info"><a href="{{url_for('main.new_blog')}}"><i class="fas fa-plus"></i>  New post</a></button></br><br>
   <!--Display profile photo-->
   <div class="col-md-4">
 
@@ -44,7 +44,7 @@
     </table>
     <div>
       <h3 class='text-center'><strong>My blogs</strong></h3><br>
-      {% if user.blogs %}
+        {% if user.blogs %}
 		{% for blog in user.blogs %}
 		<div class="col-md-4">
 			<div class="card" style='padding:7px;background-color: rgb(225, 226, 241);box-shadow: 1px 1px 5px rgb(162, 218, 240);'>
