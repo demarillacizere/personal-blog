@@ -8,7 +8,7 @@
 			<div class="card" style='padding:7px;background-color: rgb(225, 236, 241);box-shadow: 1px 1px 5px rgb(207, 230, 240);'>
 				<div class="card-body">
 					<h4 class="card-title"><strong>{{blog.title}}</strong></h4><hr>
-					<p class="card-text">{{blog.content}} | truncate(200)</p>
+					<p class="card-text">{{blog.content | truncate(200)}}</p>
                     <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
 					<div class='card-footer'>
 						<a href="{{url_for('main.comment',blog_id = blog.id)}}"><span><i class="fa fa-comment"></i>{{blog.comments.count()}}</span></a>&nbsp;
@@ -24,4 +24,23 @@
 		{% endif %}
 	</div>
 </div>
+{% endmacro %}
+
+<!-- Displaying blogs macro -->
+{% macro displayingBlogs(blogs) %}
+
+    {% for blog in blogs %}
+
+    <div class="row">
+
+      <div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
+        <h4>Author</h4>
+        <p>{{blog.user.username}}</p>
+      </div>
+      <div class="col-xs-10 col-sm-10 col-md-8 col-lg-8">
+        <h2> <a href="{{url_for('main.single_blog',id=blog.id)}}">{{blog.content}}</a> </h2>
+      </div>
+    </div>
+
+    {% endfor %}
 {% endmacro %}

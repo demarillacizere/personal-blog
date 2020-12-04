@@ -4,6 +4,7 @@ from flask import render_template,request,redirect,url_for,abort
 from ..models import User, Comment, Blog, Like, Dislike
 from .forms import CommentForm, BlogForm, UpdateProfile
 from .. import db, photos
+import markdown2
 
 @main.route('/')
 def index():
@@ -74,6 +75,14 @@ def new_blog():
 
     title = 'New blog | One Minute blog'
     return render_template('new_blog.html', title = title, blogform = blog_form)
+
+@main.route('/blog/<int:id>')
+def single_blog(id):
+    blog=Blog.query.get(id)
+    if blog is None:
+        abort(404)
+    format_blog = markdown2.markdown(blog.blog,extras=["code-friendly", "fenced-code-blocks"])
+    return render_template('blog.html',blog = blog,format_blog=format_blog)
 
 @main.route('/blog/<int:blog_id>/comment',methods = ['GET', 'POST'])
 def comment(blog_id):
