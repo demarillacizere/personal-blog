@@ -1,0 +1,22 @@
+{% extends 'base.html'%}
+{% import 'macros.html' as macro%}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class='container-fluid'>
+  <button class="btn btn-outline-info"><a href="{{url_for('main.new_pitch')}}"><strong><i class="fas fa-plus"></i>  Add your pitch</strong></a></button></br><br>
+
+<div class='row'>
+  <div class='col-md-3'style='border-right:solid 1px lightgrey;'>
+    <div class='card categories'>
+    </div>
+  </div>
+  <div class='col-md-6'>
+    <h1 class='text-center' style="font-family: 'Righteous', 'cursive';">Welcome to the PitchIt App</h1><br>
+    <p>In life, you only have 60 seconds to impress someone. 1 minute can make or break you. How do we make sure that you use your 1 minute to actually say something meaningful?</p><br>
+    <p>We have created this app for you so that you can add your pitches and let your colleuges leave a feedback for you on what you can improve on them.</p><br>
+    <p>Our collections is in different categories. Add your pitch and read other user's brilliant pitches. Don't forget to leave a feedback !</p><br>
+  </div>
+</div> 
+<footer class='footer' style='position:fixed;left:0;bottom:0;background-color:rgb(15, 40, 61);padding:15px;text-align:center;width:100%;color:white;'>Copyright 2020 | PitchIt</footer> 
+{% endblock %}  

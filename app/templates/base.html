@@ -1,0 +1,19 @@
+{% extends 'bootstrap/base.html'%}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        {%block styles%}
+        {{ super() }}
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css?q=1280549780">
+        <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+        {% endblock %}
+    </head>
+    <body>
+        {% block navbar %}
+            {% include 'navbar.html' %}
+        {% endblock %}
+        {% block content %}
+        {% endblock%}
+    </body>
+</html>
