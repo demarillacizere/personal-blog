@@ -66,7 +66,7 @@ def new_blog():
         category = blog_form.category.data
         title = blog_form.title.data
 
-        new_blog = blog(title=title, content=body, category = category, user = current_user)
+        new_blog = Blog(title=title, content=body, category = category, user = current_user)
         new_blog.save_blog()
 
         return redirect(url_for('main.index'))
@@ -74,3 +74,67 @@ def new_blog():
 
     title = 'New blog | One Minute blog'
     return render_template('new_blog.html', title = title, blogform = blog_form)
+
+@main.route('/blog/<int:blog_id>/comment',methods = ['GET', 'POST'])
+@login_required
+def comment(blog_id):
+    '''
+    View comments page function that returns the comment page and its data
+    '''
+
+    comment_form = CommentForm()
+    blog = Blog.query.get(blog_id)
+    if blog is None:
+        abort(404)
+
+    if comment_form.validate_on_submit():
+        comment = comment_form.comment.data
+
+        new_comment = Comment(comment=comment, blog_id = blog_id, user = current_user)
+        new_comment.save_comment()
+
+        return redirect(url_for('.comment', blog_id=blog_id))
+
+    comments = Comment.query.filter_by(blog_id=blog_id).all()
+    title = 'Comments | One Min blog'
+
+    return render_template('comment.html', title = title, blog=blog ,comment_form = comment_form, comments = comments )
+
+
+
+
+
+@main.route('/blog/<int:blog_id>/like',methods = ['GET','POST'])
+def like(blog_id):
+    '''
+    View like function that returns likes
+    '''
+    blog = blog.query.get(blog_id)
+
+    likes = Like.query.filter_by(blog_id=blog_id)
+
+
+    if Like.query.filter(Like.blog_id==blog_id).first():
+        return  redirect(url_for('.index'))
+
+    new_like = Like(blog_id=blog_id)
+    new_like.save_likes()
+    return redirect(url_for('main.index'))
+
+
+
+@main.route('/blog/<int:blog_id>/dislike',methods = ['GET','POST'])
+def dislike(blog_id):
+    '''
+    View dislike function that returns dislikes
+    '''
+    blog = blog.query.get(blog_id)
+
+    blog_dislikes = Dislike.query.filter_by(blog_id=blog_id)
+
+    if Dislike.query.filter(Dislike.blog_id==blog_id).first():
+        return redirect(url_for('main.index'))
+
+    new_dislike = Dislike(blog_id=blog_id)
+    new_dislike.save_dislikes()
+    return redirect(url_for('main.index')) 
