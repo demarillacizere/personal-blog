@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class='container comment' style='margin:0 auto;'>
+    <div style="margin:0 auto"class="col-md-8">
+            <div class="panel" style="background-color: rgb(238, 239, 245); padding:10px;box-shadow:1px 1px 5px rgb(238, 239, 245);">
+                <p>{{ blog.content }}</p>
+                <p><strong>by: {{ blog.user.username }}</strong></p>
+            </div>
+            <div>
+                {% for comment in comments %}
+                <div class='panel'>
+                    <span>{{comment.comment}}&NonBreakingSpace;&nbsp;{{comment.posted.strftime('%b %d, %Y')}}</span><br><br>
+                    <a href="{{url_for('main.delete_com',comment_id = comment.id)}}"><button class='btn btn-danger'>Delete</button></a>
+                </div>
+                {% endfor %}
+            </div>
+            <div>
+                {{wtf.quick_form(comment_form)}}
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<footer class='footer' style='position:fixed;left:0;bottom:0;background-color:rgb(15, 40, 61);padding:15px;text-align:center;width:100%;color:white;'>Copyright 2020 | blogIt</footer>
+{% endblock %}

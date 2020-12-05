@@ -1,6 +1,6 @@
 from . import main
 from flask_login import login_required, current_user
-from flask import render_template,request,redirect,url_for,abort
+from flask import render_template,request,redirect,url_for,abort,flash
 from ..models import User, Comment, Blog, Like, Dislike
 from .forms import CommentForm, BlogForm, UpdateProfile
 from .. import db, photos
@@ -73,7 +73,7 @@ def new_blog():
         return redirect(url_for('main.index'))
 
 
-    title = 'New blog | One Minute blog'
+    title = 'New blog'
     return render_template('new_blog.html', title = title, blogform = blog_form)
 
 @main.route('/blog/<int:id>')
@@ -83,6 +83,31 @@ def single_blog(id):
         abort(404)
     format_blog = markdown2.markdown(blog.blog,extras=["code-friendly", "fenced-code-blocks"])
     return render_template('blog.html',blog = blog,format_blog=format_blog)
+
+@main.route('/blog/<int:blog_id>/update',methods = ['GET','POST'])
+@login_required
+def update_post(blog_id):
+    blog = Blog.query.get(blog_id)
+    form = BlogForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        body = form.content.data
+        title = form.title.data
+
+        new_blog = Blog(title=title, content=body, user = current_user)
+        new_blog.save_blog()
+
+    return render_template('profile/update.html',form =form)
+
+@main.route('/blog/<int:blog_id>/delete',methods = ['GET','POST'])
+def delete(blog_id):
+    '''
+    View like function that returns likes
+    '''
+    blog = Blog.query.get(blog_id)
+    blog.delete_blog()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('main.index'))
 
 @main.route('/blog/<int:blog_id>/comment',methods = ['GET', 'POST'])
 def comment(blog_id):
@@ -109,6 +134,16 @@ def comment(blog_id):
     return render_template('comment.html', title = title, blog=blog ,comment_form = comment_form, comments = comments )
 
 
+@main.route('/comment/<int:comment_id>/delete',methods = ['GET','POST'])
+def delete_com(comment_id):
+    '''
+    View like function that returns likes
+    '''
+    comment = Comment.query.get(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('main.index'))
 
 
 
