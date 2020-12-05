@@ -1,20 +1,33 @@
 from . import main
 from flask_login import login_required, current_user
 from flask import render_template,request,redirect,url_for,abort,flash
-from ..models import User, Comment, Blog, Like, Dislike
-from .forms import CommentForm, BlogForm, UpdateProfile
+from ..models import User, Comment, Blog, Like, Dislike, Mail_list
+from .forms import CommentForm, BlogForm, UpdateProfile, SubscribeForm
 from .. import db, photos
 import markdown2
 from ..requests import get_quote
+from ..email import mail_message
+
 quotes = get_quote()
 
-@main.route('/')
+@main.route('/',methods = ['GET','POST'])
 def index():
     blogs=Blog.query.order_by(Blog.posted.desc()).all()
+    if blogs is None:
+        abort (404) 
     for blog in blogs:
         format_blog = markdown2.markdown(blog.content,extras=["code-friendly", "fenced-code-blocks"])
+    mail_form = SubscribeForm()
+    if mail_form.validate_on_submit():
+        email = mail_form.email.data
+        name = mail_form.name.data
+        new_user = Mail_list(email=email, name = name)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('.index'))
+
     title="Shout out"
-    return render_template('index.html', title = title,blogs=blogs,format_blog=format_blog, quotes=quotes)
+    return render_template('index.html', title = title,blogs=blogs, quotes=quotes, mail_form=mail_form)
 
 @main.route('/user/<uname>')
 def profile(uname):
@@ -65,20 +78,23 @@ def new_blog():
     A function that saves the blog added
     '''
     blog_form = BlogForm()
-
+    global new_blog
     if blog_form.validate_on_submit():
         title = blog_form.title.data
         body = blog_form.content.data
         title = blog_form.title.data
-
         new_blog = Blog(title=title, content=body, user = current_user)
         new_blog.save_blog()
-
-        return redirect(url_for('main.index'))
+        users = Mail_list.query.all()
+        for user in users:
+            if user is None:
+                abort (404) 
+            mail_message("New Post","email/alert_user",user.email,user=user)
+            return redirect(url_for('main.index'))
 
 
     title = 'New blog'
-    return render_template('new_blog.html', title = title, blogform = blog_form)
+    return render_template('new_blog.html', title = title, blogform = blog_form, new_blog=new_blog)
 
 @main.route('/blog/<int:id>',methods = ['GET','POST'])
 def blog(id):
@@ -105,13 +121,14 @@ def update_post(blog_id):
     blog = Blog.query.get(blog_id)
     form = BlogForm()
     if form.validate_on_submit():
-        title = form.title.data
-        body = form.content.data
-        title = form.title.data
-
-        new_blog = Blog(title=title, content=body, user = current_user)
-        new_blog.save_blog()
-
+        blog.title = form.title.data
+        blog.content = form.content.data
+        db.session.commit()
+        flash('Your post has been updated!', 'success')
+        return redirect(url_for('.blog',id=blog.id))
+    elif request.method == 'GET':
+        form.title.data = blog.title
+        form.content.data = blog.content
     return render_template('profile/update.html',form =form)
 
 @main.route('/blog/<int:blog_id>/delete',methods = ['GET','POST'])

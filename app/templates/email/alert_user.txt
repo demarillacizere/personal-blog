@@ -1,0 +1,3 @@
+Hello {{user.name}}
+
+Hurry up and go checkout Our latest post
