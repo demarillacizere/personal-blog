@@ -12,7 +12,9 @@
                 {% for comment in comments %}
                 <div class='panel'>
                     <span>{{comment.comment}}&NonBreakingSpace;&nbsp;{{comment.posted.strftime('%b %d, %Y')}}</span><br><br>
+                    {% if user == current_user %}
                     <a href="{{url_for('main.delete_com',comment_id = comment.id)}}"><button class='btn btn-danger'>Delete</button></a>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>

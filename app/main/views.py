@@ -5,12 +5,16 @@ from ..models import User, Comment, Blog, Like, Dislike
 from .forms import CommentForm, BlogForm, UpdateProfile
 from .. import db, photos
 import markdown2
+from ..requests import get_quote
+quotes = get_quote()
 
 @main.route('/')
 def index():
     blogs=Blog.query.order_by(Blog.posted.desc()).all()
+    for blog in blogs:
+        format_blog = markdown2.markdown(blog.content,extras=["code-friendly", "fenced-code-blocks"])
     title="Shout out"
-    return render_template('index.html', title = title,blogs=blogs)
+    return render_template('index.html', title = title,blogs=blogs,format_blog=format_blog, quotes=quotes)
 
 @main.route('/user/<uname>')
 def profile(uname):
@@ -76,13 +80,24 @@ def new_blog():
     title = 'New blog'
     return render_template('new_blog.html', title = title, blogform = blog_form)
 
-@main.route('/blog/<int:id>')
-def single_blog(id):
+@main.route('/blog/<int:id>',methods = ['GET','POST'])
+def blog(id):
     blog=Blog.query.get(id)
     if blog is None:
         abort(404)
-    format_blog = markdown2.markdown(blog.blog,extras=["code-friendly", "fenced-code-blocks"])
-    return render_template('blog.html',blog = blog,format_blog=format_blog)
+    format_blog = markdown2.markdown(blog.content,extras=["code-friendly", "fenced-code-blocks"])
+    comment_form = CommentForm()
+    if comment_form.validate_on_submit():
+        comment = comment_form.comment.data
+
+        new_comment = Comment(comment=comment, blog_id = id)
+        new_comment.save_comment()
+        return redirect(url_for('.blog',id=id))
+
+    comments = Comment.query.filter_by(blog_id=id).all()
+    title = 'Post'
+
+    return render_template('blog.html',blog = blog,format_blog=format_blog,comment_form = comment_form, comments = comments,title=title)
 
 @main.route('/blog/<int:blog_id>/update',methods = ['GET','POST'])
 @login_required
@@ -107,31 +122,7 @@ def delete(blog_id):
     blog = Blog.query.get(blog_id)
     blog.delete_blog()
     flash('Your post has been deleted!', 'success')
-    return redirect(url_for('main.index'))
-
-@main.route('/blog/<int:blog_id>/comment',methods = ['GET', 'POST'])
-def comment(blog_id):
-    '''
-    View comments page function that returns the comment page and its data
-    '''
-
-    comment_form = CommentForm()
-    blog = Blog.query.get(blog_id)
-    if blog is None:
-        abort(404)
-
-    if comment_form.validate_on_submit():
-        comment = comment_form.comment.data
-
-        new_comment = Comment(comment=comment, blog_id = blog_id)
-        new_comment.save_comment()
-
-        return redirect(url_for('.comment', blog_id=blog_id))
-
-    comments = Comment.query.filter_by(blog_id=blog_id).all()
-    title = 'Comments | One Min blog'
-
-    return render_template('comment.html', title = title, blog=blog ,comment_form = comment_form, comments = comments )
+    return redirect(url_for('main.profile',uname=current_user.username))
 
 
 @main.route('/comment/<int:comment_id>/delete',methods = ['GET','POST'])
@@ -143,7 +134,7 @@ def delete_com(comment_id):
     db.session.delete(comment)
     db.session.commit()
     flash('Your post has been deleted!', 'success')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.blog',id=comment.blog_id))
 
 
 
@@ -152,7 +143,7 @@ def like(blog_id):
     '''
     View like function that returns likes
     '''
-    blog = blog.query.get(blog_id)
+    blog = Blog.query.get(blog_id)
 
     likes = Like.query.filter_by(blog_id=blog_id)
 
@@ -162,7 +153,7 @@ def like(blog_id):
 
     new_like = Like(blog_id=blog_id)
     new_like.save_likes()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.blog',id=blog_id))
 
 
 
@@ -171,7 +162,7 @@ def dislike(blog_id):
     '''
     View dislike function that returns dislikes
     '''
-    blog = blog.query.get(blog_id)
+    blog = Blog.query.get(blog_id)
 
     blog_dislikes = Dislike.query.filter_by(blog_id=blog_id)
 
@@ -180,4 +171,4 @@ def dislike(blog_id):
 
     new_dislike = Dislike(blog_id=blog_id)
     new_dislike.save_dislikes()
-    return redirect(url_for('main.index')) 
+    return redirect(url_for('main.blog',id=blog_id)) 

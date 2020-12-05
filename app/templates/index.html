@@ -3,16 +3,12 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-<div class='container-fluid'>
+<div class='container'>
 
-
+  {{ macro.displayQuotes(quotes) }}
 <div class='row'>
-  <div class='col-md-3'style='border-right:solid 1px lightgrey;'>
-  </div>
-  <div class='col-md-9'>
     {{ macro.displayBlogs(blogs) }}
-    {{macro.displayingBlogs(blogs)}}
-  </div>
 </div> 
+{{format_blog|safe}}
 <footer class='footer' style='position:fixed;left:0;bottom:0;background-color:rgb(15, 40, 61);padding:15px;text-align:center;width:100%;color:white;'>Copyright 2020 | PitchIt</footer> 
 {% endblock %}  
