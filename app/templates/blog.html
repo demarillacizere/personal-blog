@@ -3,35 +3,40 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content%}
-<div class="container-fluid">
-
-  <div class="card-body">
-    <h4 class="card-title"><strong>{{blog.title}}</strong></h4><hr>
-    {% if blog.image %}
-					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.image}}" alt="{{blog.title}} image">
-					{% else %}
-					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}default.jpg" alt="{{blog.title}} image">
-					{% endif %}
-    <p class="card-text">{{format_blog|safe}}</p>
-              <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
+<div class='container-fluid'style='margin-top:5%;'>
+  <div class='row'>
+    <div class='col-md-2'></div>
+    <div class='col-md-8'>
+      <div>
+        <h3 style='color:rgb(250, 159, 171)'><strong>{{blog.title}}</strong></h3><hr>
+        {% if blog.image %}
+              <img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.image}}" alt="{{blog.title}} image">
+              {% else %}
+              <img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}default.jpg" alt="{{blog.title}} image">
+              {% endif %}
+        <p class="card-text">{{format_blog|safe}}</p>
+                  <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
+        <div>
+          <a href="{{url_for('main.like',blog_id = blog.id)}}"><span><i class="fa fa-thumbs-up"></i>{{blog.likes.count()}}</span></a>&nbsp;
+          <span><a href="{{url_for('main.dislike',blog_id = blog.id)}}"><i class="fa fa-thumbs-down"></i></a>{{blog.dislikes.count()}}</span>&nbsp;
+        
+        </div>
+      </div>
+      <div>
+        {% for comment in comments %}
+        <div class='panel'>
+            <span>{{comment.comment}}&NonBreakingSpace;&nbsp;{{comment.posted.strftime('%b %d, %Y')}}</span><br><br>
+            {% if blog.user==current_user %}
+              <a href="{{url_for('main.delete_com',comment_id = comment.id)}}"><button class='btn btn-danger'>Delete</button></a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
     <div>
-      <a href="{{url_for('main.like',blog_id = blog.id)}}"><span><i class="fa fa-thumbs-up"></i>{{blog.likes.count()}}</span></a>&nbsp;
-      <span><a href="{{url_for('main.dislike',blog_id = blog.id)}}"><i class="fa fa-thumbs-down"></i></a>{{blog.dislikes.count()}}</span>&nbsp;
-    
+        {{wtf.quick_form(comment_form)}}
+    </div>
+    </div>
     </div>
   </div>
-  <div>
-    {% for comment in comments %}
-    <div class='panel'>
-        <span>{{comment.comment}}&NonBreakingSpace;&nbsp;{{comment.posted.strftime('%b %d, %Y')}}</span><br><br>
-        {% if blog.user==current_user %}
-          <a href="{{url_for('main.delete_com',comment_id = comment.id)}}"><button class='btn btn-danger'>Delete</button></a>
-        {% endif %}
-    </div>
-    {% endfor %}
-</div>
-<div>
-    {{wtf.quick_form(comment_form)}}
-</div>
-</div>
+  <footer class='footer' style='position:absolute;left:0;bottom:0;background-color:rgb(241, 231, 237);padding:15px;text-align:center;width:100%;color:rgba(29, 28, 28, 0.993);'>Copyright 2020 | BlogApp</footer> 
 {%endblock%}

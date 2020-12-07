@@ -4,10 +4,10 @@
 	<div class="row">
 		{% if blogs %}
 		{% for blog in blogs %}
-		<div class="col-md-8">
+		<div class="col-md-12">
 			<div class="card" style='padding:7px;box-shadow: 1px 1px 5px rgb(242, 245, 247);'>
 				<div class="card-body">
-					<h4 class="card-title"><strong>{{blog.title}}</strong></h4><hr>
+					<h4 style='color:rgb(250, 159, 171)'><strong>{{blog.title}}</strong></h4><hr>
 					{% if blog.image %}
 					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.image}}" alt="{{blog.title}} image">
 					{% else %}
@@ -15,7 +15,7 @@
 					{% endif %}
 					<p class="card-text">{{format_blog|safe}}</p>
                     <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
-					<a href="{{url_for('main.blog',id = blog.id)}}"><button class='btn btn-success'>Read More</button></a>
+					<a href="{{url_for('main.blog',id = blog.id)}}" style='color:white;'><button class='btn' style='background-color:rgb(250, 159, 171);'>Read More</button></a>
 				</div>
             </div>
 		</div>
@@ -28,9 +28,6 @@
 {% endmacro %}
 
 {% macro displayQuotes(quotes) %}
-
-    <div class="row">
-		<span>{{quotes.quote}}</span><br>
-		__<span>{{quotes.author}}</span>
-    </div>
+		<span>{{quotes.quote}}</span><br><br>
+		&nbsp;__<span>{{quotes.author}}</span>
 {% endmacro %}

@@ -1,10 +1,10 @@
 {% extends 'base.html'%}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid" style='margin-top:3%;'>
 <div class="row">
   <div class="col-md-3">
-    <button class="btn btn-outline-info"><a href="{{url_for('main.new_blog')}}"><i class="fas fa-plus"></i>  New post</a></button></br><br>
+    <h2><strong>{{user.username| capitalize}}</strong></h2>
     {% if user.profile_pic_path %}
 
     <img src="{{url_for('static',filename=user.profile_pic_path)}}" alt="" class="img-thumbnail">
@@ -18,9 +18,8 @@
 
       <input class='form-control' type="file"  name="photo" class="form-control" required><br>
       <button class='btn' type="submit">Submit</button>
-    </form>
+    </form><br>
       {% endif %}
-    <h2>{{user.username| capitalize}}</h2>
     {% if user.bio %}
       {{user.bio}}
     {%else%}
@@ -46,9 +45,10 @@
         {% else %}
         <button class="btn btn-outline-info"><a href="{{url_for('main.new_blog')}}"><i class="fas fa-plus"></i>  Add your first blog</a></button></br><br>
         {% endif %}
+        <button class="btn btn-outline-info"><a href="{{url_for('main.new_blog')}}"><i class="fas fa-plus"></i>  New post</a></button></br><br>
     </div>
   </div>
 </div>
 </div>
-<footer class='footer' style='position:absolute;left:0;bottom:0;background-color:rgb(15, 40, 61);padding:15px;text-align:center;width:100%;color:white;'>Copyright 2020 | blogIt</footer> 
+<footer class='footer' style='position:absolute;left:0;bottom:0;background-color:rgb(241, 231, 237);padding:15px;text-align:center;width:100%;color:rgba(29, 28, 28, 0.993);'>Copyright 2020 | BlogApp</footer> 
 {% endblock %}
