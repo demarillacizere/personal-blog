@@ -1,3 +1,2 @@
 Hello {{user.name}}
-
-Hurry up and go checkout Our latest post
+Follow this link to checkout our latest post https://dblog-app.herokuapp.com/
