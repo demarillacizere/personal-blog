@@ -3,19 +3,26 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content%}
+<style>
+  body{
+      background-color:rgb(245, 236, 237);
+  }
+</style>
 <div class='container-fluid'style='margin-top:5%;'>
   <div class='row'>
     <div class='col-md-2'></div>
     <div class='col-md-8'>
       <div>
-        <h3 style='color:rgb(250, 159, 171)'><strong>{{blog.title}}</strong></h3><hr>
+        <img src="{{url_for('static',filename=blog.user.profile_pic_path)}}" style='border-radius:100%' alt="" height='20px'width='20px'>
+					<span style='font-size:small'>{{blog.user.username| capitalize}}</span> . 
+					<span style='font-size:small'>{{blog.posted.strftime('%b %d, %Y')}}</span><br><br>
+        <h3><strong>{{blog.title}}</strong></h3><hr>
         {% if blog.picture %}
-              <img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.picture}}" alt="{{blog.title}} image" width='100%'>
+              <img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.picture}}" alt="{{blog.title}} image" max-width='100%' >
               {% else %}
               <img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}default.jpg" alt="{{blog.title}} image">
               {% endif %}<br><br>
         <p class="card-text">{{blog.content|safe}}</p>
-                  <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
         <div>
           <a href="{{url_for('main.like',blog_id = blog.id)}}"><span><i class="fa fa-thumbs-up" style='color:black'></i></a></span>{{blog.likes.count()}}</span>&nbsp;
           <span><a href="{{url_for('main.dislike',blog_id = blog.id)}}"><i class="fa fa-thumbs-down" style='color:black'></i></a>{{blog.dislikes.count()}}</span>&nbsp;
@@ -24,8 +31,9 @@
       </div><br>
       <div>
         {% for comment in comments %}
-        <div class='panel'>
-            <span>{{comment.comment}}&NonBreakingSpace;&nbsp;{{comment.posted.strftime('%b %d, %Y')}}</span> &nbsp;{% if blog.user==current_user %}
+        <div class='panel' style='padding:10px;'>
+            <span><i>{{comment.comment}}</i></span><br>
+            <span class='small'>{{comment.posted.strftime('%b %d, %Y')}}</span> &nbsp;{% if blog.user==current_user %}
             <a href="{{url_for('main.delete_com',comment_id = comment.id)}}"><button class='btn btn-danger'>Delete</button></a>
           {% endif %}<br><br>
         </div>

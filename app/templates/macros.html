@@ -1,21 +1,27 @@
 
 {% macro displayBlogs(blogs) %}
 <div class="container-fluid">
-	<div class="row">
 		{% if blogs %}
 		{% for blog in blogs %}
-		<div class="col-md-12">
-			<div class="card" style='padding:7px;box-shadow: 1px 1px 5px rgb(242, 245, 247);'>
-				<div class="card-body">
-					<h4 style='color:rgb(250, 159, 171)'><strong>{{blog.title}}</strong></h4><hr>
+		<div class="col-md-12" style='grid-column-gap: 5px;'>
+			<div class="row form-group" style='border:1px solid rgb(148, 147, 147);border-left:none;'>
+				<div class='col-md-6'>
 					{% if blog.picture %}
 					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.picture}}" width='100%'alt="{{blog.title}} image">
 					{% else %}
 					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}default.jpg" alt="{{blog.title}} image">
-					{% endif %}<br><br>
-					<p>{{blog.content|safe|truncate(50)}}</p>
-                    <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
-					<a href="{{url_for('main.blog',id = blog.id)}}" style='color:white;'><button class='btn' style='background-color:rgb(250, 159, 171);'>Read More</button></a>
+					{% endif %}
+				</div>
+				<div class="col-md-6" style='padding:7px;'>
+					<img src="{{url_for('static',filename=blog.user.profile_pic_path)}}" style='border-radius:100%' alt="" height='20px'width='20px'>
+					<span style='font-size:small'>{{blog.user.username| capitalize}}</span><br>
+					<span style='font-size:small'>{{blog.posted.strftime('%b %d, %Y')}}</span><br><br>
+					<a href="{{url_for('main.blog',id = blog.id)}}" style='color:black;text-decoration:none;'><h3><strong>{{blog.title}}</strong></h3></a>
+					<p>{{blog.content|safe|truncate(100)}}</p><br><br><hr>
+					<span><i class="fa fa-comment"></i>{{blog.comments.count()}}</span></a>&nbsp;
+					<span><i class="fa fa-thumbs-up"></i></a>{{blog.likes.count()}}</span>&nbsp;
+					<span><i class="fa fa-thumbs-down"></i></a>{{blog.dislikes.count()}}</span>&nbsp;
+					<a href="{{url_for('main.blog',id = blog.id)}}" style='color:white;'><button class='btn' style='background-color:rgb(250, 159, 171);'>Read More</button></a><br><br>
 				</div>
             </div>
 		</div>
@@ -24,7 +30,6 @@
 		<h4><strong>There seems to be no blogs here yet</strong></h4>
 		{% endif %}
 	</div>
-</div>
 {% endmacro %}
 
 {% macro displayQuotes(quotes) %}

@@ -25,8 +25,8 @@ class UpdateProfile(FlaskForm):
     submit = SubmitField('Submit')
 
 class SubscribeForm(FlaskForm):
-    email = StringField('Your Email Address',validators=[Required(),Email()])
-    name = StringField('Enter your full name',validators = [Required()])
+    email = StringField('Email Address',validators=[Required(),Email()])
+    name = StringField('Name',validators = [Required()])
     submit = SubmitField('Sign Up')
 
     def validate_email(self,data_field):

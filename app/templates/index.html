@@ -8,15 +8,18 @@
     background-color:rgb(250, 159, 171);
   }
 </style>
-<header style='font-family: "Righteous", "cursive";background-image:url("https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80");width:"100vh";background-repeat:no-repeat;background-size:cover;padding:13%;'>
+<header style='font-family: "Righteous", "cursive";background-image:url("https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80");width:"100vh";background-repeat:no-repeat;background-size:cover;padding:13%;height:70vh;'>
   <h1 class='text-center' style='color:white;font-size:81px'>Welcome to The BlogApp</h1>
 </header>
 <div class='container' style='margin-top:20px;'>
   <div class='row'>
-    <div class='col-md-8' >{{ macro.displayBlogs(blogs) }}</div>
+    <div class='col-md-8' >
+      <h3 class='text-center' ><strong>Recent Posts</strong></h3><br>
+      {{ macro.displayBlogs(blogs) }}
+    </div>
     <div class='col-md-4' style='position: -webkit-sticky; position:sticky;right:0;top:80px'>
       <div style='border:2px solid rgb(141, 140, 140);padding:7px;text-align:center;color:rgb(146, 142, 142)'>{{ macro.displayQuotes(quotes) }}</div><br>
-      <p>Join our mailing list to get updates about new posts<p>
+      <p>Subscribe to get updates about new posts<p>
       {{wtf.quick_form(mail_form)}}
     </div>
   </div>
