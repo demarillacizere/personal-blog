@@ -7,6 +7,11 @@
 
   <div class="card-body">
     <h4 class="card-title"><strong>{{blog.title}}</strong></h4><hr>
+    {% if blog.image %}
+					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.image}}" alt="{{blog.title}} image">
+					{% else %}
+					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}default.jpg" alt="{{blog.title}} image">
+					{% endif %}
     <p class="card-text">{{format_blog|safe}}</p>
               <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
     <div>

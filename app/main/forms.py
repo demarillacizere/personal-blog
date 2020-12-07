@@ -4,11 +4,13 @@ from wtforms.validators import Required
 from wtforms.validators import Required,Email,EqualTo
 from ..models import Mail_list
 from wtforms import ValidationError
+from flask_wtf.file import FileField, FileAllowed
 
 class BlogForm(FlaskForm):
 
  title = StringField('blog title',validators=[Required()])
  content = TextAreaField('blog')
+ image = FileField('Featured Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'])])
  submit = SubmitField('Submit')
  
 

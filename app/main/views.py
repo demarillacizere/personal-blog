@@ -1,8 +1,10 @@
 from . import main
 from flask_login import login_required, current_user
-from flask import render_template,request,redirect,url_for,abort,flash
+from flask import render_template,request,redirect,url_for,abort,flash, current_app
 from ..models import User, Comment, Blog, Like, Dislike, Mail_list
 from .forms import CommentForm, BlogForm, UpdateProfile, SubscribeForm
+from PIL import Image
+import secrets,os
 from .. import db, photos
 import markdown2
 from ..requests import get_quote
@@ -69,7 +71,19 @@ def update_pic(uname):
         db.session.commit()
     return redirect(url_for('main.profile',uname=uname))
 
-
+def save_picture(form_image):
+    randome_hex = secrets.token_hex(8)
+    f_name, f_ext = os.path.splitext(form_image.filename)
+    picture_name = randome_hex + f_ext
+    picture_path = os.path.join(current_app.root_path, 'static/featured_images', picture_name)
+    
+    output_size = (1000, 400)
+    final_image = Image.open(form_image)
+    final_image.thumbnail(output_size)
+    
+    final_image.save(picture_path)
+    
+    return picture_name
 
 @main.route('/blog/new',methods = ['GET','POST'])
 @login_required
@@ -80,10 +94,15 @@ def new_blog():
     blog_form = BlogForm()
     global new_blog
     if blog_form.validate_on_submit():
+        pic =None
+        if blog_form.image.data:
+            picture_file = save_picture(blog_form.image.data)
+            final_pic = picture_file
+            pic= final_pic
         title = blog_form.title.data
         body = blog_form.content.data
         title = blog_form.title.data
-        new_blog = Blog(title=title, content=body, user = current_user)
+        new_blog = Blog(title=title, content=body, user = current_user, picture=pic)
         new_blog.save_blog()
         users = Mail_list.query.all()
         for user in users:

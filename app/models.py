@@ -20,6 +20,7 @@ class Blog(db.Model):
     title = db.Column(db.String)
     content = db.Column(db.String)
     posted = db.Column(db.DateTime,default=datetime.utcnow)
+    picture = db.Column(db.String(225), default='default.jpg')
     likes = db.relationship('Like',backref = 'blog',lazy = "dynamic")
     dislikes = db.relationship('Dislike',backref = 'blog',lazy = "dynamic")
 
