@@ -9,26 +9,25 @@
     <div class='col-md-8'>
       <div>
         <h3 style='color:rgb(250, 159, 171)'><strong>{{blog.title}}</strong></h3><hr>
-        {% if blog.image %}
-              <img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.image}}" alt="{{blog.title}} image">
+        {% if blog.picture %}
+              <img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.picture}}" alt="{{blog.title}} image" width='100%'>
               {% else %}
               <img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}default.jpg" alt="{{blog.title}} image">
-              {% endif %}
-        <p class="card-text">{{format_blog|safe}}</p>
+              {% endif %}<br><br>
+        <p class="card-text">{{blog.content|safe}}</p>
                   <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
         <div>
-          <a href="{{url_for('main.like',blog_id = blog.id)}}"><span><i class="fa fa-thumbs-up"></i>{{blog.likes.count()}}</span></a>&nbsp;
-          <span><a href="{{url_for('main.dislike',blog_id = blog.id)}}"><i class="fa fa-thumbs-down"></i></a>{{blog.dislikes.count()}}</span>&nbsp;
+          <a href="{{url_for('main.like',blog_id = blog.id)}}"><span><i class="fa fa-thumbs-up" style='color:black'></i></a></span>{{blog.likes.count()}}</span>&nbsp;
+          <span><a href="{{url_for('main.dislike',blog_id = blog.id)}}"><i class="fa fa-thumbs-down" style='color:black'></i></a>{{blog.dislikes.count()}}</span>&nbsp;
         
         </div>
-      </div>
+      </div><br>
       <div>
         {% for comment in comments %}
         <div class='panel'>
-            <span>{{comment.comment}}&NonBreakingSpace;&nbsp;{{comment.posted.strftime('%b %d, %Y')}}</span><br><br>
-            {% if blog.user==current_user %}
-              <a href="{{url_for('main.delete_com',comment_id = comment.id)}}"><button class='btn btn-danger'>Delete</button></a>
-            {% endif %}
+            <span>{{comment.comment}}&NonBreakingSpace;&nbsp;{{comment.posted.strftime('%b %d, %Y')}}</span> &nbsp;{% if blog.user==current_user %}
+            <a href="{{url_for('main.delete_com',comment_id = comment.id)}}"><button class='btn btn-danger'>Delete</button></a>
+          {% endif %}<br><br>
         </div>
         {% endfor %}
     </div>
@@ -37,6 +36,6 @@
     </div>
     </div>
     </div>
-  </div>
-  <footer class='footer' style='position:absolute;left:0;bottom:0;background-color:rgb(241, 231, 237);padding:15px;text-align:center;width:100%;color:rgba(29, 28, 28, 0.993);'>Copyright 2020 | BlogApp</footer> 
+  </div><br><br>
+  <footer class='footer' style='position:relative;left:0;bottom:0;background-color:rgb(241, 231, 237);padding:15px;text-align:center;width:100%;color:rgba(29, 28, 28, 0.993);'>Copyright 2020 | BlogApp</footer> 
 {%endblock%}

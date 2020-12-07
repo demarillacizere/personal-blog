@@ -8,12 +8,12 @@
 			<div class="card" style='padding:7px;box-shadow: 1px 1px 5px rgb(242, 245, 247);'>
 				<div class="card-body">
 					<h4 style='color:rgb(250, 159, 171)'><strong>{{blog.title}}</strong></h4><hr>
-					{% if blog.image %}
-					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.image}}" alt="{{blog.title}} image">
+					{% if blog.picture %}
+					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}{{blog.picture}}" width='100%'alt="{{blog.title}} image">
 					{% else %}
 					<img class="img-fluid" src="{{ url_for('static', filename='featured_images/')}}default.jpg" alt="{{blog.title}} image">
-					{% endif %}
-					<p class="card-text">{{format_blog|safe}}</p>
+					{% endif %}<br><br>
+					<p>{{blog.content|safe|truncate(50)}}</p>
                     <p>Posted on {{blog.posted.strftime('%b %d, %Y')}} by {{blog.user.username| capitalize}}</p>
 					<a href="{{url_for('main.blog',id = blog.id)}}" style='color:white;'><button class='btn' style='background-color:rgb(250, 159, 171);'>Read More</button></a>
 				</div>

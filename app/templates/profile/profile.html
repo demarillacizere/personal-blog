@@ -36,7 +36,7 @@
           {% for blog in user.blogs %}
           <div class="panel col-md-6" style='padding:7px;box-shadow: 1px 1px 5px rgb(221, 226, 228);'>
             <a href="{{url_for('main.blog',id = blog.id)}}"><h5>{{blog.title}}</h5><hr></a>
-            <p class="card-text">{{blog.content | truncate(10)}}</p>
+            <p >{{blog.content|safe|truncate(30)}}</p>
             <a href="{{url_for('main.update_post',blog_id = blog.id)}}"><button class='btn btn-primary'>Edit</button></a>
             <a href="{{url_for('main.delete',blog_id = blog.id)}}"><button class='btn btn-danger'>Delete</button></a>
          </div>

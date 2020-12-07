@@ -14,7 +14,7 @@
 <div class='container' style='margin-top:20px;'>
   <div class='row'>
     <div class='col-md-8' >{{ macro.displayBlogs(blogs) }}</div>
-    <div class='col-md-4'>
+    <div class='col-md-4' style='position: -webkit-sticky; position:sticky;right:0;top:80px'>
       <div style='border:2px solid rgb(141, 140, 140);padding:7px;text-align:center;color:rgb(146, 142, 142)'>{{ macro.displayQuotes(quotes) }}</div><br>
       <p>Join our mailing list to get updates about new posts<p>
       {{wtf.quick_form(mail_form)}}

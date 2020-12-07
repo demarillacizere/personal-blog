@@ -11,7 +11,19 @@ from ..requests import get_quote
 from ..email import mail_message
 
 quotes = get_quote()
-
+def save_picture(form_image):
+    randome_hex = secrets.token_hex(8)
+    f_name, f_ext = os.path.splitext(form_image.filename)
+    picture_name = randome_hex + f_ext
+    picture_path = os.path.join(current_app.root_path, 'static/featured_images', picture_name)
+    
+    output_size = (1000, 600)
+    final_image = Image.open(form_image)
+    final_image.thumbnail(output_size)
+    
+    final_image.save(picture_path)
+    
+    return picture_name
 @main.route('/',methods = ['GET','POST'])
 def index():
     blogs=Blog.query.order_by(Blog.posted.desc()).all()
@@ -28,7 +40,7 @@ def index():
         db.session.commit()
         return redirect(url_for('.index'))
 
-    title="Shout out"
+    title="BlogApp"
     return render_template('index.html', title = title,blogs=blogs, quotes=quotes, mail_form=mail_form)
 
 @main.route('/user/<uname>')
@@ -71,19 +83,6 @@ def update_pic(uname):
         db.session.commit()
     return redirect(url_for('main.profile',uname=uname))
 
-def save_picture(form_image):
-    randome_hex = secrets.token_hex(8)
-    f_name, f_ext = os.path.splitext(form_image.filename)
-    picture_name = randome_hex + f_ext
-    picture_path = os.path.join(current_app.root_path, 'static/featured_images', picture_name)
-    
-    output_size = (1000, 400)
-    final_image = Image.open(form_image)
-    final_image.thumbnail(output_size)
-    
-    final_image.save(picture_path)
-    
-    return picture_name
 
 @main.route('/blog/new',methods = ['GET','POST'])
 @login_required
@@ -102,7 +101,8 @@ def new_blog():
         title = blog_form.title.data
         body = blog_form.content.data
         title = blog_form.title.data
-        new_blog = Blog(title=title, content=body, user = current_user, picture=pic)
+        format_blog = markdown2.markdown(body,extras=["code-friendly", "fenced-code-blocks"])
+        new_blog = Blog(title=title, content=format_blog, user = current_user, picture=pic)
         new_blog.save_blog()
         users = Mail_list.query.all()
         for user in users:
@@ -120,7 +120,7 @@ def blog(id):
     blog=Blog.query.get(id)
     if blog is None:
         abort(404)
-    format_blog = markdown2.markdown(blog.content,extras=["code-friendly", "fenced-code-blocks"])
+    
     comment_form = CommentForm()
     if comment_form.validate_on_submit():
         comment = comment_form.comment.data
@@ -132,7 +132,7 @@ def blog(id):
     comments = Comment.query.filter_by(blog_id=id).all()
     title = 'Post'
 
-    return render_template('blog.html',blog = blog,format_blog=format_blog,comment_form = comment_form, comments = comments,title=title)
+    return render_template('blog.html',blog = blog,comment_form = comment_form, comments = comments,title=title)
 
 @main.route('/blog/<int:blog_id>/update',methods = ['GET','POST'])
 @login_required
@@ -140,8 +140,13 @@ def update_post(blog_id):
     blog = Blog.query.get(blog_id)
     form = BlogForm()
     if form.validate_on_submit():
+        final_pic=None
+        if form.image.data:
+            picture_file = save_picture(form.image.data)
+            final_pic = picture_file
         blog.title = form.title.data
         blog.content = form.content.data
+        blog.picture = final_pic
         db.session.commit()
         flash('Your post has been updated!', 'success')
         return redirect(url_for('.blog',id=blog.id))
