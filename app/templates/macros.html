@@ -13,11 +13,11 @@
 					{% endif %}
 				</div>
 				<div class="col-md-6" style='padding:7px;'>
-					<img src="{{url_for('static',filename=blog.user.profile_pic_path)}}" style='border-radius:100%' alt="" height='20px'width='20px'>
+					<img src="{{url_for('static',filename='/')}}{{blog.user.profile_pic_path}}" style='border-radius:100%' alt="" height='20px'width='20px'>
 					<span style='font-size:small'>{{blog.user.username| capitalize}}</span><br>
 					<span style='font-size:small'>{{blog.posted.strftime('%b %d, %Y')}}</span><br><br>
 					<a href="{{url_for('main.blog',id = blog.id)}}" style='color:black;text-decoration:none;'><h3><strong>{{blog.title}}</strong></h3></a>
-					<p>{{blog.content|safe|truncate(100)}}</p><br><br><hr>
+					<p>{{blog.content|safe|truncate(100)}}</p><br><hr>
 					<span><i class="fa fa-comment"></i>{{blog.comments.count()}}</span></a>&nbsp;
 					<span><i class="fa fa-thumbs-up"></i></a>{{blog.likes.count()}}</span>&nbsp;
 					<span><i class="fa fa-thumbs-down"></i></a>{{blog.dislikes.count()}}</span>&nbsp;
