@@ -13,7 +13,7 @@
     <div class='col-md-2'></div>
     <div class='col-md-8'>
       <div>
-        <img src="{{url_for('static',filename=blog.user.profile_pic_path)}}" style='border-radius:100%' alt="" height='20px'width='20px'>
+        <img src="{{url_for('static',filename='/')}}{{blog.user.profile_pic_path}}" style='border-radius:100%' alt="" height='20px'width='20px'>
 					<span style='font-size:small'>{{blog.user.username| capitalize}}</span> . 
 					<span style='font-size:small'>{{blog.posted.strftime('%b %d, %Y')}}</span><br><br>
         <h3><strong>{{blog.title}}</strong></h3><hr>
