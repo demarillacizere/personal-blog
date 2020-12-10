@@ -104,12 +104,12 @@ def new_blog():
         format_blog = markdown2.markdown(body,extras=["code-friendly", "fenced-code-blocks"])
         new_blog = Blog(title=title, content=format_blog, user = current_user, picture=pic)
         new_blog.save_blog()
-        users = Mail_list.query.all()
-        for user in users:
-            if user is None:
-                abort (404) 
-            mail_message("New Post","email/alert_user",user.email,user=user)
-            return redirect(url_for('main.index'))
+        # users = Mail_list.query.all()
+        # for user in users:
+        #     if user is None:
+        #         abort (404) 
+        #     mail_message("New Post","email/alert_user",user.email,user=user)
+        #     return redirect(url_for('main.index'))
 
 
     title = 'New blog'
